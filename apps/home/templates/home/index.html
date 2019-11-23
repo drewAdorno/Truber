@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <title>User Home</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/bb321aa492.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8P4AaiZf-OGcwBSFNB_DV8k1EaETZRBI&callback=initMap"> </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row bg-dark">
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#" role="button"><i class="fas fa-bars"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right bg-dark">
+                            <a class="dropdown-item text-white" href="#">User Settings</a>
+                            <a class="dropdown-item text-white" href="/logout">Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                    {{message}}
+                <div id="map"></div>
+            </div>
+            {% if not message %}
+            <div class="row">
+                <button type="button" class="btn btn-dark btn-lg btn-block mt-2" data-toggle="modal" data-target="#currentLocation">Find a Driver</button>
+            </div>
+            {% endif %}
+            
+            <div class="modal" id="currentLocation">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-white">
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row">
+                                    <p>Would you like to use your current location as your pickup location?</p>
+                                </div>
+                                <div class="row bt-2">
+                                    <div class="col">
+                                        <button type="button" onclick="get_coords()" class="btn btn-light text-primary btn-block border" data-dismiss="modal">Yes</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-light text-primary btn-block border" data-dismiss="modal" data-toggle="modal" data-target="#pickupAddress">No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="pickupAddress">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-white">
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <p>Please enter a pickup location</p>
+                                        <form action="/home/aToC" method="POST">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="inputAddress">Address</label>
+                                                <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="inputCity">City</label>
+                                                    <input type="text" class="form-control" id="inputCity">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="inputState">State</label>
+                                                    <select id="inputState" class="form-control">
+                                                        <option selected>Choose...</option>
+                                                        <option>...</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="inputZip">Zip</label>
+                                                    <input type="text" class="form-control" id="inputZip">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                    <button type="submit" class="btn btn-light text-primary btn-block border" data-dismiss="modal">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+            <script>
+                $('#myModal').on('shown.bs.modal', function () {
+                    $('#myInput').trigger('focus')
+                })
+                function get_coords()
+                {
+                    navigator.geolocation.getCurrentPosition(give_coords)  
+                }
+                function give_coords(pos)
+                {
+                    window.location.href = "/home/searchDrivers/" + pos.coords.latitude + "_" + pos.coords.longitude;
+                    
+                }
+                function initMap(myLatlng)
+                {
+                    mapOptions={
+                        zoom:13,
+                        center:myLatlng
+                    }
+                    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                    var marker = new google.maps.Marker(
+                    {
+                        position: myLatlng,
+                        title:"You are here",
+                        icon: "{% static 'home/images/user_icon.png' %}"
+                    });
+                    marker.setMap(map)
+    
+                }
+                function success(pos)
+                {
+                    myLatlng= {lat: pos.coords.latitude, lng: pos.coords.longitude};
+                    initMap(myLatlng)
+                }      
+                navigator.geolocation.getCurrentPosition(success)
+                
+                {% if waiting %}
+                    window.onload=function() {checkDB()};
+                    function checkDB()
+                    {
+                        stopTimeout=setTimeout(function(){window.location.href = "/home/check_response";}, 3000);
+                    }
+                {% endif %}
+            </script>
+    </body>
+</html>

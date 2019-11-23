@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <title>Driver Dropoff</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/bb321aa492.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8P4AaiZf-OGcwBSFNB_DV8k1EaETZRBI&callback=initMap"> </script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row bg-dark">
+            <ul class="nav nav-pills ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right bg-dark">
+                        <a class="dropdown-item text-white" href="#">User Settings</a>
+                        <a class="dropdown-item text-white" href="/logout">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div id="map"></div>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-dark btn-lg btn-block mt-2" data-toggle="modal" onclick="arrived()">Click when Finished</button>
+        </div>
+        <script>   
+            var directionsDisplay= new google.maps.DirectionsRenderer();
+            var directionsService= new google.maps.DirectionsService();
+
+            var map;
+
+            var point1= new google.maps.LatLng({{pickup.Driver.lat}},{{pickup.Driver.lng}});
+            var point2= new google.maps.LatLng({{pickup.dropOff_lat}},{{pickup.dropOff_lng}});
+
+            var mapOptions= {
+                zoom:12,
+                center:point1
+            };
+
+            map= new google.maps.Map(document.getElementById('map'),mapOptions);
+            var customer = new google.maps.Marker(
+                {
+                    position: point1,
+                    icon: "{% static 'home/images/driver_icon.png' %}"
+                });
+                customer.setMap(map)
+
+                var driver = new google.maps.Marker(
+                {
+                    position: point2,
+                    icon: "{% static 'home/images/user_icon.png' %}"
+                });
+                driver.setMap(map)
+
+            directionsDisplay.setMap(map);
+
+            function calculateRoute()
+            {
+                var request={
+                    origin:point1,
+                    destination:point2,
+                    travelMode: 'DRIVING'
+                };
+                directionsService.route(request, function(result, status){
+                    if(status == "OK")
+                    {
+                        directionsDisplay.setDirections(result);
+                    }
+                });
+            }   
+
+            $(window).on('load',function(){
+                    calculateRoute();
+                    });
+            function arrived()
+            {
+                window.location.href = "/home/driver_dropoff";
+            }
+        </script>
+</body>
+</html>

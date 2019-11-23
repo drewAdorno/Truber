@@ -1,0 +1,78 @@
+Truber Notes
+
+Users
+	*Username (Email)
+	*Password
+	*Current_Location
+	*Item(s) size
+	*Rating
+	*Payment Method
+
+
+Drivers
+	*Username (Email)
+	*Password
+	*Current_Location
+	*First Name
+	*Last Name
+	*Home Address
+	*DL Number
+	*Truck Details
+	*Schedule (Advanced Feature)
+	*Rating
+
+Map
+	*Users*
+	*Drivers*
+	*Heat Zones
+	
+
+Features
+	
+	
+	User Experience
+	*When a user logs in, he or she sees a map view based on their location
+	*Prompt will appear asking them about their particular item (Length, Width, Height, Weight)
+		*Preset Options? 
+	*Drivers will then show on map (little trucks/ vans)
+	*Clicking a driver on the map, will display their name, rating, their truck size and estimated time of arrival
+	*Clicking "Choose Driver" will then send the driver the user's location and item and request for them to pick it up
+	*If no drivers avaliable give user the option to wait in queue
+	*When driver picks up request alert user with ETA and ask for confirmation
+	
+	Driver Experience
+	*When a driver logs in, he or she sees heat zones indicating where people are requesting from 
+	*If any user in queue matches the conditions (locations, truck size), they are requested to accept
+	*Otherwise when user requests in radius of drivers location, driver is notified 
+	*Accepting will then direct the Driver to the user via GPS directions
+	
+	User Signup
+	*Users must sign up using email and password
+	*Users will then add their Payment Method (Card, Paypal, Cash)
+
+	Driver Signup
+	*Drivers must sign up by filling out these fields
+		*First name
+		*Last name
+		*Address
+		*DL number
+		*Driving City
+	*Drivers must then pass a background check
+	*While background check is taking place, driver can update settings
+		*Truck Details
+			*Truck make,model
+			*Bed size
+			*Weight Limit
+		*Bank Info
+		*Weight comfortable lifting alone
+	*Once background check is passed Driver is allowed to go "Online"
+	
+		
+		
+	
+	
+	
+	
+
+	
+	
