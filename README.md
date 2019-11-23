@@ -7,5 +7,5 @@ Uber for Trucks (work in Progress)
   <li>DB: SQL-Lite</li>
   <li>Framework: Django</li>
   <li>Templating Language:Jinja</li>
-  <li>APIs:Google Maps and GeoPy</li>
+  <li>APIs: Google Maps and GeoPy</li>
 </ul>
